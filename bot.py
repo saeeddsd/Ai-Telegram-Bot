@@ -148,12 +148,12 @@ def start_command(message):
 
 @bot.message_handler(commands=['help'])
 def help_command(message):
-    if not db.user_exists(message.from_user.id): return
-    bot.reply_to(message, "🌟 <b>راهنما</b>\n\n✨ فقط کافیه پیامت رو بفرستی!\n\n/start - شروع\n/help - راهنما\n/mystats - آمار شخصی", parse_mode='HTML')
+    if not is_admin(message.from_user.id) and not db.user_exists(message.from_user.id): return
+
 
 @bot.message_handler(commands=['mystats'])
 def my_stats_command(message):
-    if not db.user_exists(message.from_user.id): return
+    if not is_admin(message.from_user.id) and not db.user_exists(message.from_user.id): return
     stats = db.get_user_stats(message.from_user.id)
     bot.reply_to(message, f"📊 <b>آمار شما</b>\n\n💬 پیام‌ها: {stats.get('message_count', 0)}\n🗓 مکالمات: {stats.get('conversation_count', 0)}\n📅 عضویت: {stats.get('created_at', 'N/A')[:10]}", parse_mode='HTML')
 
@@ -162,8 +162,8 @@ def my_stats_command(message):
 def handle_message(message):
     user_id = message.from_user.id
     
-    # رفع باگ سکوت مرگبار
-    if not db.user_exists(user_id):
+    # ادمین‌ها از فیلتر کاربر بودن عبور می‌کنند
+    if not is_admin(user_id) and not db.user_exists(user_id):
         return bot.reply_to(message, "⛔ شما دسترسی به بات ندارید.", parse_mode='HTML')
     
     if not rate_limiter.is_allowed(user_id):
@@ -209,7 +209,7 @@ def handle_message(message):
 
 @bot.message_handler(content_types=['photo', 'video', 'document', 'audio', 'voice', 'sticker'])
 def handle_media(message):
-    if not db.user_exists(message.from_user.id): return
+    if not is_admin(message.from_user.id) and not db.user_exists(message.from_user.id): return
     bot.reply_to(message, "متأسفم، فعلاً فقط به متن جواب میدم. 📝", parse_mode='HTML')
 
 # ========== اجرا ==========
