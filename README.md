@@ -88,7 +88,7 @@ Ai-Telegram-Bot/
 ### 1. کلون پروژه
 
 ```bash
-git clone https://github.com/USERNAME/Ai-Telegram-Bot.git
+git clone https://github.com/saeeddsd/Ai-Telegram-Bot.git
 cd Ai-Telegram-Bot
 ```
 
